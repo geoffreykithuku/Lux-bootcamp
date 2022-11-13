@@ -5,6 +5,7 @@ import './App.css'
 
 
 function App() {
+
   const [taskList, setTaskList] = useState([{title: 'Task 1', id:'2'}])
 
   function handleDelete(id){

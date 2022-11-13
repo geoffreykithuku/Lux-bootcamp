@@ -3,6 +3,7 @@ import { useState , useReducer} from 'react'
 
 function CreateList({setTaskList}) {
     const [taskTitle, setTaskTitle] = useState(' ')
+    
     const handleInput = (e)=>{
         setTaskTitle(e.target.value)
 
