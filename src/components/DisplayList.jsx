@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useReducer } from "react";
 import CreateList from "./CreateList";
 import List from "./List";
 
@@ -9,18 +9,47 @@ const initialTasks = [
   { id: 2, title: "Revise React Hooks", completed: false },
   { id: 3, title: "Build a Todo APP", completed: false },
 ];
+
+function reducer(tasks, action) {
+  const { type } = action;
+  switch (type) {
+    case "add":
+      const { id, title } = action;
+      return [{ id, title, completed: false }, ...tasks];
+    case "change":
+      const updatedTask = action.task;
+      return tasks.map((existingTask) => {
+        if (existingTask.id === updatedTask.id) {
+          return updatedTask;
+        } else {
+          return existingTask;
+        }
+      });
+    case "remove":
+      const taskId = action.id;
+      return tasks.filter((task) => {
+        return task.id !== taskId;
+      });
+  }
+}
 const DisplayList = () => {
-  const [tasks, setTasks] = useState(initialTasks);
+  const [tasks, dispatch] = useReducer(reducer, initialTasks);
 
   function handleCreateTask(task) {
-    setTasks([
-      {
-        id: nextId++,
-        title: task,
-        completed: false,
-      },
-      ...tasks,
-    ]);
+    dispatch({
+      type: "add",
+      id: nextId++,
+      title: task,
+    });
+
+    // setTasks([
+    //   {
+    //     id: nextId++,
+    //     title: task,
+    //     completed: false,
+    //   },
+    //   ...tasks,
+    // ]);
   }
 
   let taskList = tasks.map((task) => {
@@ -35,23 +64,32 @@ const DisplayList = () => {
   });
 
   function handleChange(updatedTask) {
-    setTasks(
-      tasks.map((existingTask) => {
-        if (existingTask.id === updatedTask.id) {
-          return updatedTask;
-        } else {
-          return existingTask;
-        }
-      })
-    );
+    dispatch({
+      type: "change",
+      task: updatedTask,
+    });
+
+    // setTasks(
+    //   tasks.map((existingTask) => {
+    //     if (existingTask.id === updatedTask.id) {
+    //       return updatedTask;
+    //     } else {
+    //       return existingTask;
+    //     }
+    //   })
+    // );
   }
 
   function handleDelete(taskId) {
-    setTasks(
-      tasks.filter((task) => {
-        return task.id !== taskId;
-      })
-    );
+    dispatch({
+      type:"remove",
+      id: taskId,
+    });
+    // setTasks(
+    //   tasks.filter((task) => {
+    //     return task.id !== taskId;
+    //   })
+    // );
   }
   return (
     <div>
