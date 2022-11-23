@@ -30,6 +30,8 @@ function reducer(tasks, action) {
       return tasks.filter((task) => {
         return task.id !== taskId;
       });
+    default:
+      return "No tasks";
   }
 }
 const DisplayList = () => {
@@ -82,7 +84,7 @@ const DisplayList = () => {
 
   function handleDelete(taskId) {
     dispatch({
-      type:"remove",
+      type: "remove",
       id: taskId,
     });
     // setTasks(
